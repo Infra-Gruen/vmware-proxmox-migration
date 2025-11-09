@@ -1,0 +1,8 @@
+# RHEL SuSE Migration
+
+## Prepare initramfs
+
+
+```bash
+dracut -f /boot/initramfs-$(uname -r).img $(uname -r) --add-drivers "virtio virtio_pci virtio_blk virtio_net virtio_ring virtio_scsi"
+```
