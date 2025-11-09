@@ -6,3 +6,19 @@
 ```bash
 dracut -f /boot/initramfs-$(uname -r).img $(uname -r) --add-drivers "virtio virtio_pci virtio_blk virtio_net virtio_ring virtio_scsi"
 ```
+
+
+## Preparation/fixes (Proxmox Forums)
+
+I had a similar problem, a centos 7 vm migrated from vmware booted only with scsi adapter set to VMware PVSCSI. Turns out the virtio_scsi module was missing so a new initramfs was needed.
+
+modprobe virtio_scsi
+dracut -f
+
+Afterwards the switch to VirtIO SCSI and booting the vm worked. Learned from that I prepared my vms with
+
+yum install qemu-guest-agent
+yum remove open-vm-tools
+dracut --force --add-drivers "virtio_balloon virtio_scsi virtio_console virtio_net virtio_pci"
+
+before the migration from vmware. No VMware PVSCSI adapter step needed anymore.
